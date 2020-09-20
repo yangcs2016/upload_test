@@ -3,10 +3,12 @@ version '1.0'
 
 buildscript {
     repositories {
+        maven { url "http://maven.aliyun.com/nexus/content/repositories/releases" }
+        maven { url 'http://mvnrepo.alibaba-inc.com/mvn/repository' }
         google()
         jcenter()
     }
-
+    apply from: 'thirdparty-lib/config.gradle'
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.0'
     }
@@ -14,8 +16,13 @@ buildscript {
 
 rootProject.allprojects {
     repositories {
+        maven { url "http://maven.aliyun.com/nexus/content/repositories/releases" }
+        maven { url 'http://mvnrepo.alibaba-inc.com/mvn/repository' }
+        maven { url 'https://dl.bintray.com/umsdk/release' }
+        maven { url 'http://4thline.org/m2' }
         google()
         jcenter()
+        flatDir { dirs 'src/main/libs' }
     }
 }
 

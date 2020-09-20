@@ -14,60 +14,41 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
-  UploadPlugin upload = new UploadPlugin();
+  UploadController controller;
+
   @override
   void initState() {
     super.initState();
-
-  }
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      await upload.onSayHello.listen((event) {
-        print("method: onSayHello---"+event);
-          platformVersion = event;
-      });
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _platformVersion = platformVersion;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
+    UploadPlugin upload = UploadPlugin(
+      onCreated: onViewCreated,
+    );
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+          child: Container(
+            child: upload,
+            height: 50.0,
+            width: 100.0,
+          ),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            UploadPlugin.setName('给点力好不好？').then((value) {
-              setState(() {
-                _platformVersion = value;
-              });
-            });
-            // initPlatformState();
+            controller.setText('给点力好不好？');
           },
           child: Icon(Icons.flight_takeoff),
         ),
       ),
-
     );
+  }
+
+  void onViewCreated(UploadController controller) {
+    this.controller = controller;
   }
 }
